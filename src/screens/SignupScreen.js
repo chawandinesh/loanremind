@@ -1,5 +1,6 @@
 import React from 'react';
-import firebase from 'firebase';
+import firebaseAuth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {
   View,
   Text,
@@ -10,15 +11,25 @@ import {
 const {height, width} = Dimensions.get('window');
 export default function SignupScreen(props) {
   const [auth, setAuth] = React.useState({
+    name: '',
     email: '',
     password: '',
   });
   const register = () => {
-    firebase
-      .auth()
+    firebaseAuth()
       .createUserWithEmailAndPassword(auth.email, auth.password)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then(res => {
+        firestore()
+          .collection('users')
+          .doc(firebaseAuth().currentUser.uid)
+          .set({
+            name: auth.name,
+            email: auth.email,
+          });
+      })
+      .catch(err => {
+        console.log(err, 'err');
+      });
   };
   return (
     <View
@@ -42,6 +53,12 @@ export default function SignupScreen(props) {
             width: width * 0.68,
             alignSelf: 'center',
           }}
+          onChangeText={text =>
+            setAuth({
+              ...auth,
+              name: text,
+            })
+          }
           placeholder="Name.."
         />
       </View>

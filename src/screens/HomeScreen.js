@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, createRef} from 'react';
+import React, {useState, useEffect, useLayoutEffect, createRef} from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,17 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import {useIsFocused} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import firebaseAuth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const {height, width} = Dimensions.get('window');
 export default function HomeScreen(props) {
+  const [data, setData] = useState([]);
+  const isFocused = useIsFocused();
+  const getInitialData = async () => {};
+
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerShown: true,
@@ -25,20 +32,45 @@ export default function HomeScreen(props) {
     });
   }, [props.navigation]);
 
+  React.useEffect(() => {
+    getInitialData();
+    if(firebaseAuth().currentUser){
+
+      firestore()
+        .collection('usersdata')
+        .doc(firebaseAuth().currentUser.uid)
+        .collection('data')
+        .get()
+        .then(querySnapshot => {
+          const dataItems = [];
+          querySnapshot.forEach(documentSnapshot => {
+            dataItems.push({...documentSnapshot.data(), id: documentSnapshot.id});
+          });
+          setData(dataItems);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [props, isFocused]);
   const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity style={styles.renderContainer}>
+      <TouchableOpacity
+        style={styles.renderContainer}
+        onPress={() =>
+          props.navigation.navigate('DetailsScreen', {indexValue: item.id})
+        }>
         <View style={styles.renderTopViewContainer}>
           <View>
             <Icon name="calendar-today" size={height * 0.05} />
           </View>
           <View style={{marginLeft: 20}}>
-            <Text style={{fontSize: height * 0.03}}>02-04-2019</Text>
+            <Text style={{fontSize: height * 0.03}}>{item.date}</Text>
           </View>
         </View>
         <View style={styles.devider}></View>
         <View style={styles.renderBottomContainer}>
-          <Text style={styles.renderBottomText}>Some data</Text>
+          <Text style={styles.renderBottomText}>{item.name}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -48,15 +80,24 @@ export default function HomeScreen(props) {
     <View style={styles.container}>
       <View style={styles.pinkView}>
         <View style={styles.titleView}>
-          <FlatList
-            contentContainerStyle={{alignItems: 'center'}}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={renderItem}
-          />
+          {data.filter(e => e.is_active).length ? (
+            <FlatList
+              contentContainerStyle={{alignItems: 'center'}}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              data={data.filter(e => e.is_active)}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={renderItem}
+            />
+          ) : (
+            <View style={{alignItems: 'center'}}>
+              <Text style={{fontSize: height * 0.03, color: '#fff'}}>
+                {' '}
+                No Data
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.whiteView}>
@@ -76,7 +117,8 @@ export default function HomeScreen(props) {
           <View>
             <Icon name="menu" size={height * 0.04} />
           </View>
-          <TouchableOpacity onPress={() => props.navigation.navigate("CategoriesScreen")}>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('CategoriesScreen')}>
             <Text style={styles.buttonText}>Categories</Text>
           </TouchableOpacity>
         </TouchableOpacity>

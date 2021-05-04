@@ -6,12 +6,17 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import firebaseAuth from '@react-native-firebase/auth'
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const {height, width} = Dimensions.get('window');
 export default function DrawerContent(props) {
   const [active, setActive] = React.useState('Home');
+
+  const handleLogout = () => {
+    firebaseAuth().signOut()
+  }
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContainer}>
@@ -48,7 +53,7 @@ export default function DrawerContent(props) {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity style={styles.logoutBtn}>
+          <TouchableOpacity style={styles.logoutBtn} onPress={() => handleLogout()}>
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>

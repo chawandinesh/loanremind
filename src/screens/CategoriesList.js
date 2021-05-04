@@ -1,7 +1,13 @@
-import React from 'react';
-import {View, Text, Dimensions, FlatList} from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, Dimensions, FlatList, TouchableOpacity} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+import firebaseAuth from '@react-native-firebase/auth';
+import {useIsFocused} from '@react-navigation/native';
 const {height, width} = Dimensions.get('window');
 export default function CategoriesList(props) {
+  const isFocused = useIsFocused();
+  const getInitialData = async () => {};
+  const [data, setData] = useState([]);
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerStyle: {
@@ -11,10 +17,33 @@ export default function CategoriesList(props) {
       headerTintColor: '#fff',
     });
   }, [props.navigation]);
+  console.log(data);
+
+  React.useEffect(() => {
+    getInitialData();
+    firestore()
+      .collection('usersdata')
+      .doc(firebaseAuth().currentUser.uid)
+      .collection('data')
+      .get()
+      .then(querySnapshot => {
+        const dataItems = [];
+        querySnapshot.forEach(documentSnapshot => {
+          dataItems.push({...documentSnapshot.data(), id: documentSnapshot.id});
+        });
+        setData(dataItems);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, [props, isFocused]);
 
   const renderItem = ({item, index}) => {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() =>
+          props.navigation.navigate('DetailsScreen', {indexValue: item.id})
+        }
         style={{
           width: width * 0.9,
           alignItems: 'center',
@@ -44,7 +73,7 @@ export default function CategoriesList(props) {
           </View>
           <View>
             <Text style={{fontSize: height * 0.025, fontWeight: 'bold'}}>
-              Abc
+              {item.name}
             </Text>
           </View>
         </View>
@@ -66,22 +95,46 @@ export default function CategoriesList(props) {
           </View>
           <View>
             <Text style={{fontSize: height * 0.025, fontWeight: 'bold'}}>
-              3982
+              {item.amount}
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (
     <View style={{height, width, backgroundColor: '#34a8eb'}}>
       <View style={{height: height * 0.92, width: width, alignItems: 'center'}}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={[1, 3, 4, 5, 8]}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {data.filter(e => e.is_active).length ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={data.filter(e => e.is_active)}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        ) : (
+          <View
+            style={{
+              height: height * 0.3,
+              width: width * 0.9,
+              borderRadius: height * 0.04,
+              borderWidth: 3,
+              marginTop: height * 0.3,
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: height * 0.03,
+                fontSize: height * 0.03,
+                fontWeight: 'bold',
+                color: '#fff',
+              }}>
+              No Data
+            </Text>
+          </View>
+        )}
       </View>
     </View>
   );

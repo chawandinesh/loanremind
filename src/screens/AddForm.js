@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,21 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
+import firestore from '@react-native-firebase/firestore';
+import firebaseAuth from '@react-native-firebase/auth';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 const {height, width} = Dimensions.get('window');
 export default function AddForm(props) {
+  const [formState, setFormState] = useState({
+    name: '',
+    amount: '',
+    date: '',
+    phno: '',
+    is_active: true,
+  });
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -22,8 +31,59 @@ export default function AddForm(props) {
   };
 
   const handleConfirm = date => {
-    console.warn('A date has been picked: ', date);
+    setFormState({...formState, date: moment(date).format('DD-MM-YYYY')});
     hideDatePicker();
+  };
+
+  React.useEffect(() => {
+    console.log(props.route.params)
+
+    if (props.route.params !== undefined) {
+      setFormState(props.route.params.details);
+    }
+  }, []);
+
+  const handleSubmit = () => {
+    console.log(formState, 'formState');
+    if (props.route.params) {
+      firestore()
+        .collection('usersdata')
+        .doc(firebaseAuth().currentUser.uid)
+        .collection('data')
+        .doc(props.route.params.docId)
+        .update(formState)
+        .then(res => {
+          console.log('updated');
+          setFormState({
+            name: '',
+            amount: '',
+            date: '',
+            phno: '',
+          });
+          props.navigation.goBack()
+        })
+        .catch(err => {
+          console.log('failed to update');
+        });
+    } else {
+      firestore()
+        .collection('usersdata')
+        .doc(firebaseAuth().currentUser.uid)
+        .collection('data')
+        .add(formState)
+        .then(res => {
+          setFormState({
+            name: '',
+            amount: '',
+            date: '',
+            phno: '',
+          });
+          props.navigation.goBack()
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   useLayoutEffect(() => {
@@ -36,7 +96,7 @@ export default function AddForm(props) {
     });
   }, [props.navigation]);
   return (
-    <View style={{height, width}}>
+    <KeyboardAwareScrollView style={{height, width}}>
       <View
         style={{
           height: height * 0.75,
@@ -63,6 +123,9 @@ export default function AddForm(props) {
             NAME
           </Text>
           <TextInput
+            placeholder="enter name"
+            value={formState.name}
+            onChangeText={text => setFormState({...formState, name: text})}
             style={{
               height: height * 0.05,
               width: width * 0.8,
@@ -83,6 +146,9 @@ export default function AddForm(props) {
             AMOUNT
           </Text>
           <TextInput
+            value={formState.amount}
+            placeholder="enter amount"
+            onChangeText={text => setFormState({...formState, amount: text})}
             style={{
               height: height * 0.05,
               width: width * 0.8,
@@ -110,6 +176,9 @@ export default function AddForm(props) {
               alignItems: 'center',
             }}>
             <TextInput
+              placeholder="Select date"
+              value={formState.date}
+              editable={false}
               style={{
                 height: height * 0.05,
                 width: width * 0.8,
@@ -138,6 +207,9 @@ export default function AddForm(props) {
             PH.NO
           </Text>
           <TextInput
+            onChangeText={text => setFormState({...formState, phno: text})}
+            value={formState.phno}
+            placeholder="Enter ph no"
             style={{
               height: height * 0.05,
               width: width * 0.8,
@@ -155,6 +227,7 @@ export default function AddForm(props) {
           width: width,
         }}>
         <TouchableOpacity
+          onPress={() => handleSubmit()}
           style={{
             width: width * 0.5,
             height: height * 0.07,
@@ -179,6 +252,6 @@ export default function AddForm(props) {
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-    </View>
+    </KeyboardAwareScrollView>
   );
 }

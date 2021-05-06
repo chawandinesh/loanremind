@@ -13,7 +13,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const {height, width} = Dimensions.get('window');
 export default function DrawerContent(props) {
   const [active, setActive] = React.useState('Home');
-
   const handleLogout = () => {
     firebaseAuth().signOut()
   }
@@ -25,32 +24,58 @@ export default function DrawerContent(props) {
         </View>
         <View style={styles.drawerNavigationContainer}>
           <View style={styles.drawerItemsContainer}>
-            <TouchableOpacity
-              style={[
-                {
-                  ...styles.drawerItem,
-                  backgroundColor: active === 'Home' ? '#898' : '#fff',
-                },
-              ]}
+            {/* <TouchableOpacity
+              // style={[
+              //   {
+              //     ...styles.drawerItem,
+              //     backgroundColor: active === 'Home' ? '#898' : '#fff',
+              //   },
+              // ]}
               onPress={() => {
                 props.navigation.navigate('Home');
                 setActive('Home');
               }}>
               <Text>Home</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
-              style={[
-                {
-                  ...styles.drawerItem,
-                  backgroundColor: active === 'Profile' ? '#898' : '#fff',
-                },
-              ]}
+             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              // style={[
+              //   {
+              //     ...styles.drawerItem,
+              //     backgroundColor: active === 'Profile' ? '#898' : '#fff',
+              //   },
+              // ]}
               onPress={() => {
                 props.navigation.navigate('Profile');
                 setActive('Profile');
               }}>
               <Text>Profile</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              onPress={() => {
+                props.navigation.navigate('Categories');
+                setActive('Categories');
+              }}>
+              <Text>Categories</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              onPress={() => {
+                props.navigation.navigate('AboutUs');
+                setActive('Categories');
+              }}>
+              <Text>AboutUs</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              onPress={() => {
+                props.navigation.navigate('RateUs');
+                setActive('Categories');
+              }}>
+              <Text>Rate Us</Text>
+            </TouchableOpacity>
+            
           </View>
 
           <TouchableOpacity style={styles.logoutBtn} onPress={() => handleLogout()}>
@@ -76,7 +101,7 @@ const styles = StyleSheet.create({
   },
   drawerItemsContainer: {
     width: width * 0.7,
-    height: height * 0.1,
+    height: height * 0.3,
     alignItems: 'center',
     justifyContent: 'space-around',
   },

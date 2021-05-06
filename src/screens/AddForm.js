@@ -19,9 +19,16 @@ export default function AddForm(props) {
     amount: '',
     date: '',
     phno: '',
+    category: props.route.params.category,
     is_active: true,
+    interest: '',
+    notes: '',
+    duedate: '',
   });
   const [isDatePickerVisible, setDatePickerVisibility] = React.useState(false);
+  const [isDueDatePickerVisible, setIsDueDatePickerVisible] = React.useState(
+    false,
+  );
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -35,17 +42,28 @@ export default function AddForm(props) {
     hideDatePicker();
   };
 
-  React.useEffect(() => {
-    console.log(props.route.params)
+  const showdueDatePicker = () => {
+    setIsDueDatePickerVisible(true);
+  };
 
-    if (props.route.params !== undefined) {
+  const hidedueDatePicker = () => {
+    setIsDueDatePickerVisible(false);
+  };
+
+  const handledueDateConfirm = date => {
+    setFormState({...formState, duedate: moment(date).format('DD-MM-YYYY')});
+    hidedueDatePicker();
+  };
+
+  React.useEffect(() => {
+    if (props.route.params.hasOwnProperty('details')) {
       setFormState(props.route.params.details);
     }
   }, []);
+  console.log(props.route.params, 'in Add')
 
   const handleSubmit = () => {
-    console.log(formState, 'formState');
-    if (props.route.params) {
+    if (props.route.params.hasOwnProperty('docId')) {
       firestore()
         .collection('usersdata')
         .doc(firebaseAuth().currentUser.uid)
@@ -59,26 +77,38 @@ export default function AddForm(props) {
             amount: '',
             date: '',
             phno: '',
+            category: props.route.params.category,
+            is_active: true,
+            interest: '',
+            notes: '',
+            duedate: '',
           });
-          props.navigation.goBack()
+          props.navigation.goBack();
         })
         .catch(err => {
-          console.log('failed to update');
+          console.log(err, 'failed to update');
         });
     } else {
+      console.log('userdata', firebaseAuth().currentUser.uid, props.route.params)
       firestore()
         .collection('usersdata')
         .doc(firebaseAuth().currentUser.uid)
         .collection('data')
         .add(formState)
         .then(res => {
+          console.log(res)
           setFormState({
             name: '',
             amount: '',
             date: '',
             phno: '',
+            category: props.route.params.category,
+            is_active: true,
+            interest: '',
+            notes: '',
+            duedate: '',
           });
-          props.navigation.goBack()
+          props.navigation.goBack();
         })
         .catch(err => {
           console.log(err);
@@ -91,36 +121,39 @@ export default function AddForm(props) {
       headerShown: true,
       headerTitle: 'Add Loan',
       headerTitleAlign: 'center',
-      headerStyle: {backgroundColor: '#287'},
-      headerTintColor: '#fff',
+      headerStyle: {backgroundColor: '#46eb34'},
+      headerTintColor: '#000',
     });
   }, [props.navigation]);
   return (
     <KeyboardAwareScrollView style={{height, width}}>
       <View
         style={{
-          height: height * 0.75,
+          height: height * 0.8,
           width,
           justifyContent: 'space-evenly',
-          backgroundColor: '#287',
-          borderBottomRightRadius: height * 0.1,
-          borderBottomLeftRadius: height * 0.1,
+          backgroundColor: '#fff',
+          borderBottomRightRadius: height * 0.01,
+          borderBottomLeftRadius: height * 0.01,
         }}>
-        <Text
+        {/* <Text
           style={{color: '#fff', textAlign: 'center', fontSize: height * 0.03}}>
           {moment(new Date()).format('DD-MM-YYYY')}
-        </Text>
+        </Text> */}
         <View
           style={{
-            height: height * 0.08,
             alignItems: 'flex-start',
             justifyContent: 'center',
-            borderRadius: 10,
-            borderWidth: 3,
-            borderColor: '#ffa',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            // borderColor: '#ffa',
+            backgroundColor:'#ddd',
+            height: height * 0.1,
           }}>
-          <Text style={{fontWeight: 'bold', padding: 1, color: '#fff'}}>
-            NAME
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
+            Member Name
           </Text>
           <TextInput
             placeholder="enter name"
@@ -135,14 +168,16 @@ export default function AddForm(props) {
         </View>
         <View
           style={{
-            height: height * 0.08,
             alignItems: 'flex-end',
             justifyContent: 'center',
-            borderRadius: 10,
-            borderWidth: 3,
-            borderColor: '#ffa',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            backgroundColor:'#ddd',
+            height: height * 0.1,
           }}>
-          <Text style={{fontWeight: 'bold', padding: 1, color: '#fff'}}>
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
             AMOUNT
           </Text>
           <TextInput
@@ -158,15 +193,17 @@ export default function AddForm(props) {
         </View>
         <View
           style={{
-            height: height * 0.08,
             alignItems: 'flex-start',
             justifyContent: 'center',
-            borderRadius: 10,
-            borderWidth: 3,
-            borderColor: '#ffa',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            backgroundColor:'#ddd',
+            height: height * 0.1,
           }}>
-          <Text style={{fontWeight: 'bold', padding: 1, color: '#fff'}}>
-            MATURITY DATE
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
+            GIVEN DATE
           </Text>
           <View
             style={{
@@ -196,15 +233,17 @@ export default function AddForm(props) {
                 </View> */}
         <View
           style={{
-            height: height * 0.08,
-            alignItems: 'flex-start',
+            alignItems: 'flex-end',
             justifyContent: 'center',
-            borderRadius: 10,
-            borderWidth: 3,
-            borderColor: '#ffa',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            backgroundColor:'#ddd',
+            height: height * 0.1,
           }}>
-          <Text style={{fontWeight: 'bold', padding: 1, color: '#fff'}}>
-            PH.NO
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
+            PHONE.NO
           </Text>
           <TextInput
             onChangeText={text => setFormState({...formState, phno: text})}
@@ -217,11 +256,100 @@ export default function AddForm(props) {
             }}
           />
         </View>
+
         <View></View>
+
+        <View
+          style={{
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            backgroundColor:'#ddd',
+            height: height * 0.1,          }}>
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
+            DUE DATE
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              width: width * 0.9,
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <TextInput
+              placeholder="Select date"
+              value={formState.duedate}
+              editable={false}
+              style={{
+                height: height * 0.05,
+                width: width * 0.8,
+                backgroundColor: '#fff',
+              }}
+            />
+            <TouchableOpacity onPress={showdueDatePicker}>
+              <FontAwesome name="calendar" size={height * 0.03} color="#fff" />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View
+          style={{
+            alignItems: 'flex-end',
+            justifyContent: 'center',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            backgroundColor:'#ddd',
+            height: height * 0.1,
+          }}>
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
+            MONTHLY INTREST
+          </Text>
+          <TextInput
+            onChangeText={text => setFormState({...formState, interest: text})}
+            value={formState.interest}
+            placeholder="Enter interest"
+            style={{
+              height: height * 0.05,
+              width: width * 0.8,
+              backgroundColor: '#fff',
+            }}
+          />
+        </View>
+
+        <View
+          style={{
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            borderBottomRightRadius: 10,
+            borderBottomLeftRadius: 10,
+            borderTopWidth: 5,
+            borderTopColor:'#46eb34',
+            backgroundColor:'#ddd',
+            height: height * 0.1,
+          }}>
+          <Text style={{fontWeight: 'bold', padding: 1, color: '#000'}}>
+            Notes
+          </Text>
+          <TextInput
+            onChangeText={text => setFormState({...formState, notes: text})}
+            value={formState.notes}
+            placeholder="Enter notes"
+            style={{
+              height: height * 0.05,
+              width: width * 0.8,
+              backgroundColor: '#fff',
+            }}
+          />
+        </View>
       </View>
       <View
         style={{
-          height: height * 0.14,
+          height: height * 0.12,
           alignItems: 'center',
           justifyContent: 'center',
           width: width,
@@ -231,7 +359,8 @@ export default function AddForm(props) {
           style={{
             width: width * 0.5,
             height: height * 0.07,
-            backgroundColor: '#287',
+            borderBottomWidth: 3,
+            backgroundColor: '#46eb34',
             borderRadius: height * 0.02,
             alignItems: 'center',
             justifyContent: 'center',
@@ -251,6 +380,13 @@ export default function AddForm(props) {
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
+      />
+
+      <DateTimePickerModal
+        isVisible={isDueDatePickerVisible}
+        mode="date"
+        onConfirm={handledueDateConfirm}
+        onCancel={hidedueDatePicker}
       />
     </KeyboardAwareScrollView>
   );

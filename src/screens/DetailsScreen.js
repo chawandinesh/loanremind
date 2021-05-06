@@ -1,5 +1,11 @@
 import React, {useEffect} from 'react';
-import {View, Text, Dimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import firebaseAuth from '@react-native-firebase/auth';
 import {useIsFocused} from '@react-navigation/native';
@@ -37,9 +43,9 @@ export default function DetailsScreen(props) {
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerStyle: {
-        backgroundColor: '#323297',
+        backgroundColor: '#fff',
       },
-      headerTintColor: '#fff',
+      headerTintColor: '#000',
       headerTitleAlign: 'center',
     });
   }, [props.navigation]);
@@ -67,16 +73,20 @@ export default function DetailsScreen(props) {
       });
   }, [props, isFocused]);
   return (
-    <View style={{height, width, backgroundColor: '#323297'}}>
-      <View style={{marginTop: height * 0.03}}>
-        <View
-          style={{
-            width: width,
-            height: height * 0.1,
-            marginBottom: height * 0.02,
-            backgroundColor: '#fa2',
-            justifyContent: 'center',
-          }}>
+    <View style={{height, width, backgroundColor: '#ddd'}}>
+      <View style={{marginTop: height * 0.01}}>
+        <View style={styles.viewBack}>
+          <Text
+            style={{
+              fontSize: height * 0.024,
+              fontWeight: 'bold',
+              color: '#232',
+              textAlign: 'center',
+            }}>
+            Category: {details.category}
+          </Text>
+        </View>
+        <View style={styles.viewBack}>
           <Text
             style={{
               fontSize: height * 0.024,
@@ -87,14 +97,7 @@ export default function DetailsScreen(props) {
             Name: {details.name}
           </Text>
         </View>
-        <View
-          style={{
-            width: width,
-            height: height * 0.1,
-            marginBottom: height * 0.02,
-            backgroundColor: '#fa2',
-            justifyContent: 'center',
-          }}>
+        <View style={styles.viewBack}>
           <Text
             style={{
               fontSize: height * 0.024,
@@ -105,14 +108,7 @@ export default function DetailsScreen(props) {
             Date: {details.date}
           </Text>
         </View>
-        <View
-          style={{
-            width: width,
-            height: height * 0.1,
-            marginBottom: height * 0.02,
-            backgroundColor: '#fa2',
-            justifyContent: 'center',
-          }}>
+        <View style={styles.viewBack}>
           <Text
             style={{
               fontSize: height * 0.024,
@@ -123,14 +119,29 @@ export default function DetailsScreen(props) {
             amount: {details.amount}
           </Text>
         </View>
-        <View
-          style={{
-            width: width,
-            height: height * 0.1,
-            marginBottom: height * 0.02,
-            backgroundColor: '#fa2',
-            justifyContent: 'center',
-          }}>
+        <View style={styles.viewBack}>
+          <Text
+            style={{
+              fontSize: height * 0.024,
+              fontWeight: 'bold',
+              color: '#232',
+              textAlign: 'center',
+            }}>
+            interest: {details.interest}
+          </Text>
+        </View>
+        <View style={styles.viewBack}>
+          <Text
+            style={{
+              fontSize: height * 0.024,
+              fontWeight: 'bold',
+              color: '#232',
+              textAlign: 'center',
+            }}>
+            notes: {details.notes}
+          </Text>
+        </View>
+        <View style={styles.viewBack}>
           <Text
             style={{
               fontSize: height * 0.024,
@@ -142,10 +153,10 @@ export default function DetailsScreen(props) {
           </Text>
         </View>
       </View>
-      <View
+      {/* <View
         style={{
           width: width,
-          height: height * 0.3,
+          height: height * 0.05,
           alignItems: 'center',
           justifyContent: 'space-around',
           flexDirection: 'row',
@@ -175,11 +186,72 @@ export default function DetailsScreen(props) {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <Text style={{color: '#fff', fontSize: height * 0.03}}>Delete</Text>
+          <Text style={{color: '#fff', fontSize: height * 0.03}}>Paid</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
+      <TouchableOpacity
+        onPress={() =>
+          props.navigation.navigate('AddForm', {
+            details: details,
+            docId: props.route.params.indexValue,
+          })
+        }
+        style={{
+          width: width * 0.9,
+          marginTop: height * 0.03,
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOffset: {width: 1, height: 1},
+          shadowOpacity: 0.5,
+          shadowRadius: 3,
+          alignSelf: 'center',
+          height: height * 0.06,
+          backgroundColor: '#41cc44',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={{fontWeight: 'bold', fontSize: height * 0.03}}>
+          UPDATE
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => handleDelete()}
+        style={{
+          width: width * 0.9,
+          elevation: 4,
+          shadowColor: '#000',
+          shadowOffset: {width: 1, height: 1},
+          shadowOpacity: 0.5,
+          shadowRadius: 3,
+          marginTop: height * 0.03,
+          alignSelf: 'center',
+          height: height * 0.06,
+          backgroundColor: '#41cc44',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Text style={{fontWeight: 'bold', fontSize: height * 0.03}}>PAID</Text>
+      </TouchableOpacity>
 
       <Text></Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  viewBack: {
+    width: width,
+    height: height * 0.08,
+    borderTopColor: '#41cc44',
+    marginBottom: height * 0.02,
+    backgroundColor: '#fff',
+    borderRadius: height * 0.05,
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 1, height: 1},
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    borderTopWidth: 4,
+    justifyContent: 'center',
+  },
+});

@@ -12,6 +12,9 @@ import ProfileScreen from '../screens/ProfileScreen';
 import CategoriesList from '../screens/CategoriesList';
 import firebaseAuth from '@react-native-firebase/auth';
 import DetailsScreen from '../screens/DetailsScreen';
+import CategoriesScreen from '../screens/CategoriesScreen'
+import AboutUs from '../screens/AboutUs'
+import RateUs from '../screens/RateUs'
 const {height, width} = Dimensions.get('window');
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -57,8 +60,11 @@ export default function index() {
           <Drawer.Navigator
             drawerContent={props => <DrawerContent {...props} />}
             drawerStyle={{width: width * 0.7}}>
+            <Drawer.Screen name="Categories" component={CategoriesScreen}/>
             <Drawer.Screen name="Home" component={HomeScreen} />
             <Drawer.Screen name="Profile" component={ProfileScreen} />
+            <Drawer.Screen name="AboutUs" component={AboutUs}/>
+            <Drawer.Screen name="RateUs" component={RateUs}/>
           </Drawer.Navigator>
         );
       }else{
@@ -75,6 +81,7 @@ export default function index() {
             options={{headerShown: false}}
           />
           <Stack.Screen name="AddForm" component={AddForm} />
+          {/* <Drawer.Screen name="Categories" component={CategoriesScreen}/> */}
           <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
           <Stack.Screen name="CategoriesScreen" component={CategoriesList} />
         </Stack.Navigator>

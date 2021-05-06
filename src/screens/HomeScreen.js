@@ -19,13 +19,12 @@ export default function HomeScreen(props) {
   const [data, setData] = useState([]);
   const isFocused = useIsFocused();
   const getInitialData = async () => {};
-
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerShown: true,
       headerTitleAlign: 'center',
       headerTintColor: '#fff',
-      headerTitle: 'Loan Remind',
+      headerTitle: "Loan Remind",
       headerStyle: {
         backgroundColor: '#eb3489',
       },
@@ -34,8 +33,7 @@ export default function HomeScreen(props) {
 
   React.useEffect(() => {
     getInitialData();
-    if(firebaseAuth().currentUser){
-
+    if (firebaseAuth().currentUser) {
       firestore()
         .collection('usersdata')
         .doc(firebaseAuth().currentUser.uid)
@@ -44,7 +42,10 @@ export default function HomeScreen(props) {
         .then(querySnapshot => {
           const dataItems = [];
           querySnapshot.forEach(documentSnapshot => {
-            dataItems.push({...documentSnapshot.data(), id: documentSnapshot.id});
+            dataItems.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
           });
           setData(dataItems);
         })
@@ -58,14 +59,17 @@ export default function HomeScreen(props) {
       <TouchableOpacity
         style={styles.renderContainer}
         onPress={() =>
-          props.navigation.navigate('DetailsScreen', {indexValue: item.id})
+          props.navigation.navigate('DetailsScreen', {
+            indexValue: item.id,
+            category: props.route.params.category,
+          })
         }>
         <View style={styles.renderTopViewContainer}>
           <View>
             <Icon name="calendar-today" size={height * 0.05} />
           </View>
           <View style={{marginLeft: 20}}>
-            <Text style={{fontSize: height * 0.03}}>{item.date}</Text>
+            <Text style={{fontSize: height * 0.03}}>{item.duedate}</Text>
           </View>
         </View>
         <View style={styles.devider}></View>
@@ -80,13 +84,17 @@ export default function HomeScreen(props) {
     <View style={styles.container}>
       <View style={styles.pinkView}>
         <View style={styles.titleView}>
-          {data.filter(e => e.is_active).length ? (
+          {
+            props.route.params ?
+          data
+            .filter(e => e.is_active)
+            .filter(e => e.category === props.route.params.category).length ? (
             <FlatList
               contentContainerStyle={{alignItems: 'center'}}
               horizontal
               pagingEnabled
               showsHorizontalScrollIndicator={false}
-              data={data.filter(e => e.is_active)}
+              data={data.filter(e => e.is_active).filter((e) => e.category === props.route.params.category)}
               keyExtractor={(item, index) => index.toString()}
               renderItem={renderItem}
             />
@@ -97,13 +105,26 @@ export default function HomeScreen(props) {
                 No Data
               </Text>
             </View>
-          )}
+          )
+          :
+          <View style={{alignItems: 'center'}}>
+          <Text style={{fontSize: height * 0.03, color: '#fff'}}>
+            {' '}
+            No Data
+          </Text>
+        </View>
+
+        }
         </View>
       </View>
       <View style={styles.whiteView}>
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => props.navigation.navigate('AddForm')}>
+          onPress={() =>
+            props.navigation.navigate('AddForm', {
+              category: props.route.params.category,
+            })
+          }>
           <View>
             <Icon name="add" size={height * 0.04} />
           </View>
@@ -113,13 +134,21 @@ export default function HomeScreen(props) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.buttonContainer}
-          onPress={() => props.navigation.navigate('CategoriesList')}>
+          onPress={() =>
+            props.navigation.navigate('CategoriesList', {
+              category: props.route.params.category,
+            })
+          }>
           <View>
             <Icon name="menu" size={height * 0.04} />
           </View>
           <TouchableOpacity
-            onPress={() => props.navigation.navigate('CategoriesScreen')}>
-            <Text style={styles.buttonText}>Categories</Text>
+            onPress={() =>
+              props.navigation.navigate('CategoriesScreen', {
+                category: props.route.params.category,
+              })
+            }>
+            <Text style={styles.buttonText}>Details</Text>
           </TouchableOpacity>
         </TouchableOpacity>
       </View>

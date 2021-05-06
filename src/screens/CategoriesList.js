@@ -8,16 +8,16 @@ export default function CategoriesList(props) {
   const isFocused = useIsFocused();
   const getInitialData = async () => {};
   const [data, setData] = useState([]);
+  console.log(props.route.params, 'routes..');
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerStyle: {
-        backgroundColor: '#34a8eb',
+        backgroundColor: '#fff',
       },
       headerTitleAlign: 'center',
-      headerTintColor: '#fff',
+      headerTintColor: '#000',
     });
   }, [props.navigation]);
-  console.log(data);
 
   React.useEffect(() => {
     getInitialData();
@@ -42,20 +42,60 @@ export default function CategoriesList(props) {
     return (
       <TouchableOpacity
         onPress={() =>
-          props.navigation.navigate('DetailsScreen', {indexValue: item.id})
+          props.navigation.navigate('DetailsScreen', {
+            indexValue: item.id,
+            category: props.route.params.category,
+          })
         }
         style={{
           width: width * 0.9,
-          alignItems: 'center',
+          borderTopColor: '#41cc44',
+          shadowColor: '#000',
+          shadowOffset: {width: 1, height: 1},
+          shadowOpacity: 0.5,
+          shadowRadius: 3,
+          elevation: 3,
+          // alignItems: 'center',
           borderTopWidth: 10,
           height: height * 0.2,
           backgroundColor: '#fff',
-          justifyContent: 'space-around',
+          // justifyContent: 'space-around',
           borderBottomRightRadius: height * 0.03,
           borderBottomLeftRadius: height * 0.03,
           marginBottom: 10,
         }}>
+        <View style={{marginLeft: width * 0.1, paddingTop: 10}}>
+          <Text style={{fontWeight: 'bold', fontSize: height * 0.026}}>
+            {item.name}
+          </Text>
+        </View>
+        <View style={{marginLeft: width * 0.1, paddingTop: 10}}>
+          <Text style={{fontSize: height * 0.023, color: 'gray'}}>
+            Interest: {item.interest}
+          </Text>
+        </View>
+        <View style={{marginLeft: width * 0.1, paddingTop: 10}}>
+          <Text style={{fontSize: height * 0.023, color: 'gray'}}>
+            Due Date: {item.duedate}
+          </Text>
+        </View>
         <View
+          style={{
+            marginRight: width * 0.05,
+            paddingTop: 10,
+            alignItems: 'flex-end',
+          }}>
+          <Text
+            style={{
+              fontSize: height * 0.023,
+              color: 'gray',
+              fontWeight: 'bold',
+              color: '#890',
+            }}>
+            Amount: {item.amount}
+          </Text>
+        </View>
+        {/* <View
           style={{
             flexDirection: 'row',
             width: width * 0.7,
@@ -98,17 +138,21 @@ export default function CategoriesList(props) {
               {item.amount}
             </Text>
           </View>
-        </View>
+        </View> */}
       </TouchableOpacity>
     );
   };
   return (
-    <View style={{height, width, backgroundColor: '#34a8eb'}}>
+    <View style={{height, width, backgroundColor: '#ddd'}}>
       <View style={{height: height * 0.92, width: width, alignItems: 'center'}}>
-        {data.filter(e => e.is_active).length ? (
+        {data
+          .filter(e => e.is_active)
+          .filter(e => e.category === props.route.params.category).length ? (
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={data.filter(e => e.is_active)}
+            data={data
+              .filter(e => e.is_active)
+              .filter(e => e.category === props.route.params.category)}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
           />
@@ -129,13 +173,38 @@ export default function CategoriesList(props) {
                 fontSize: height * 0.03,
                 fontSize: height * 0.03,
                 fontWeight: 'bold',
-                color: '#fff',
+                color: '#003',
               }}>
-              No Data
+              No Loans to Pay
             </Text>
           </View>
         )}
       </View>
+        <TouchableOpacity
+        onPress={() => {
+          props.navigation.navigate('AddForm', {
+            category: props.route.params.category,
+          })
+        }}
+          style={{
+            width: height * 0.08,
+            height: height * 0.08,
+            borderRadius: height * 0.02,
+            elevation: 5,
+            zIndex: 3,
+            position:'absolute',
+            bottom: height * 0.1, 
+            right: 20,
+            shadowColor: '#000',
+            shadowOffset: {height: 1, width: 1},
+            shadowOpacity: 0.5,
+            backgroundColor:'#41cc44',
+            shadowRadius: 5,
+            alignItems:'center',
+            justifyContent:'center'
+          }}>
+          <Text style={{fontWeight: "bold", fontSize: height * 0.05, textAlign:'center'}}>+</Text>
+        </TouchableOpacity>
     </View>
   );
 }

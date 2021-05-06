@@ -10,10 +10,15 @@ export default function CategoriesScreen(props) {
   const getInitialData = async () => {};
   useLayoutEffect(() => {
     props.navigation.setOptions({
-      headerTitleAlign: 'center',
+      // headerTitleAlign: 'center',
+      headerTitle: '',
       headerStyle: {
-        height: height * 0.1,
+            shadowOpacity: 0,
+            elevation: 0
       },
+      // headerStyle: {
+      //   height: height * 0.1,
+      // },
       headerShown: true,
     });
   }, [props.navigation]);
@@ -52,11 +57,12 @@ export default function CategoriesScreen(props) {
     // ) {
     return (
       <TouchableOpacity
-      onPress={() =>
-        props.navigation.navigate('CategoriesScreen', {
-          category: item,
-        })
-      }
+        onPress={() =>
+          props.navigation.navigate('CategoriesScreen', {
+            category: item,
+            paid: false,
+          })
+        }
         style={{
           height: height * 0.1,
           margin: 7,
@@ -86,7 +92,8 @@ export default function CategoriesScreen(props) {
           // onPress={() => props.navigation.navigate('Home', {category: item})}
           onPress={() =>
             props.navigation.navigate('CategoriesScreen', {
-              category: item
+              category: item,
+              paid: true,
             })
           }
           style={{
@@ -112,6 +119,9 @@ export default function CategoriesScreen(props) {
   };
   return (
     <View style={{height, width, backgroundColor: '#ddd'}}>
+      <View style={{height: height * 0.08, paddingLeft: width * 0.05, marginBottom: height * 0.01, backgroundColor:"#fff"}}>
+       <Text style={{fontWeight:'bold', fontSize: height * 0.04}}>Categories</Text>
+      </View>
       <View>
         <View
           style={{

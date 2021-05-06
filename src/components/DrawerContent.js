@@ -5,22 +5,60 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import firebaseAuth from '@react-native-firebase/auth'
+import firebaseAuth from '@react-native-firebase/auth';
+import firebaseStorage from '@react-native-firebase/storage';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {useIsFocused} from '@react-navigation/native';
 
 const {height, width} = Dimensions.get('window');
 export default function DrawerContent(props) {
   const [active, setActive] = React.useState('Home');
+  const [image, setImage] = React.useState(null);
+  const isFocused = useIsFocused();
+  const getInitialData = async () => {};
   const handleLogout = () => {
-    firebaseAuth().signOut()
-  }
+    firebaseAuth().signOut();
+  };
+
+  React.useLayoutEffect(() => {
+    getInitialData();
+    const imageRef =
+      firebaseAuth().currentUser &&
+      firebaseStorage().ref(`post/${firebaseAuth().currentUser.uid}/profile`);
+    // let imageRef = firebase.storage().ref('/' + imageName);
+
+    imageRef &&
+      imageRef
+        .getDownloadURL()
+        .then(url => {
+          console.log(url);
+          setImage(url);
+          //from url you can fetched the uploaded image easily
+          // this.setState({profileImageUrl: url});
+        })
+        .catch(e => setImage(null));
+  }, [isFocused, props]);
+
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContainer}>
         <View style={styles.profileImageContainer}>
-          <FontAwesome5 name="user-circle" size={height * 0.1} />
+          {/* <FontAwesome5 name="user-circle" size={height * 0.1} /> */}
+          {image === null ? (
+            <FontAwesome5 name="user-circle" size={height * 0.1} />
+          ) : (
+            <Image
+              style={{
+                width: height * 0.16,
+                height: height * 0.16,
+                borderRadius: height * 0.1,
+              }}
+              source={{uri: image}}
+            />
+          )}
         </View>
         <View style={styles.drawerNavigationContainer}>
           <View style={styles.drawerItemsContainer}>
@@ -38,7 +76,16 @@ export default function DrawerContent(props) {
               <Text>Home</Text>
             </TouchableOpacity> */}
             <TouchableOpacity
-             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              style={{
+                borderTopWidth: 4,
+                borderTopColor: '#77ee33',
+                width: width * 0.6,
+                alignItems: 'center',
+                elevation: 1,
+                paddingVertical: 10,
+                borderRightWidth: 2,
+                borderLeftWidth: 2,
+              }}
               // style={[
               //   {
               //     ...styles.drawerItem,
@@ -52,7 +99,16 @@ export default function DrawerContent(props) {
               <Text>Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity
-             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              style={{
+                borderTopWidth: 4,
+                borderTopColor: '#77ee33',
+                width: width * 0.6,
+                alignItems: 'center',
+                elevation: 1,
+                paddingVertical: 10,
+                borderRightWidth: 2,
+                borderLeftWidth: 2,
+              }}
               onPress={() => {
                 props.navigation.navigate('Categories');
                 setActive('Categories');
@@ -60,7 +116,16 @@ export default function DrawerContent(props) {
               <Text>Categories</Text>
             </TouchableOpacity>
             <TouchableOpacity
-             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              style={{
+                borderTopWidth: 4,
+                borderTopColor: '#77ee33',
+                width: width * 0.6,
+                alignItems: 'center',
+                elevation: 1,
+                paddingVertical: 10,
+                borderRightWidth: 2,
+                borderLeftWidth: 2,
+              }}
               onPress={() => {
                 props.navigation.navigate('AboutUs');
                 setActive('Categories');
@@ -68,17 +133,27 @@ export default function DrawerContent(props) {
               <Text>AboutUs</Text>
             </TouchableOpacity>
             <TouchableOpacity
-             style={{borderTopWidth:4, borderTopColor:'#77ee33', width:width * 0.6, alignItems:'center',elevation:1, paddingVertical:10, borderRightWidth:2,borderLeftWidth:2}}
+              style={{
+                borderTopWidth: 4,
+                borderTopColor: '#77ee33',
+                width: width * 0.6,
+                alignItems: 'center',
+                elevation: 1,
+                paddingVertical: 10,
+                borderRightWidth: 2,
+                borderLeftWidth: 2,
+              }}
               onPress={() => {
                 props.navigation.navigate('RateUs');
                 setActive('Categories');
               }}>
               <Text>Rate Us</Text>
             </TouchableOpacity>
-            
           </View>
 
-          <TouchableOpacity style={styles.logoutBtn} onPress={() => handleLogout()}>
+          <TouchableOpacity
+            style={styles.logoutBtn}
+            onPress={() => handleLogout()}>
             <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
@@ -91,6 +166,7 @@ const styles = StyleSheet.create({
   drawerContainer: {marginTop: height * 0.05},
   profileImageContainer: {
     height: height * 0.14,
+    marginBottom: 20,
     width: width * 0.7,
     justifyContent: 'center',
     alignItems: 'center',

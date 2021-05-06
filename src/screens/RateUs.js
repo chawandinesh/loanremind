@@ -20,11 +20,21 @@ export default function AboutUs(props) {
     React.useLayoutEffect(() => {
         props.navigation.setOptions({
             headerShown: true,
-            headerTitleAlign:'center'
+            headerTitleAlign:'center',
+            headerTitle: '',
+            headerStyle: {
+              elevation:0,
+              shadowOpacity:0
+            }
         })
     }, [props.navigation])
   return (
-    <View style={styles.centeredView}>
+    <View style={{height: height}}>
+          <View style={{backgroundColor:'#fff', height : height * 0.07,}}>
+          <Text style={{fontSize: height * 0.04, fontWeight:'bold', marginLeft: width * 0.05}}>Rate Us</Text>
+        </View>
+
+    <ImageBackground source={require('../assets/bg1.jpg')} style={styles.centeredView}>
       <View style={styles.modalView}>
         {/* <Image
           style={{
@@ -70,6 +80,7 @@ export default function AboutUs(props) {
           </Text>
         </TouchableOpacity>
       </View>
+    </ImageBackground>
     </View>
   );
 }
@@ -92,7 +103,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    // marginTop: 22,
   },
   modalView: {
     margin: 20,

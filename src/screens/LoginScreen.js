@@ -82,7 +82,7 @@ export default function LoginScreen(props) {
               justifyContent: 'space-around',
               alignItems: 'center',
               width: width * 0.6,
-              backgroundColor: 'rgb(123,238,199)',
+              backgroundColor: '#41cc44',
               borderRadius: height * 0.03,
             }}>
             <TouchableOpacity
@@ -154,6 +154,8 @@ export default function LoginScreen(props) {
               position: 'relative',
               elevation: 3,
               backgroundColor: '#fff',
+              borderTopWidth:5,
+              borderTopColor:"#41cc44"
             }}>
             <View style={styles.searchSection}>
               <EntypoIcon
@@ -197,7 +199,7 @@ export default function LoginScreen(props) {
                 left: width * 0.1,
                 zIndex: 10,
                 width: width * 0.7,
-                backgroundColor: 'rgb(123,238,199)',
+                backgroundColor: '#41cc44',
               }}>
               <Text style={{fontSize: height * 0.023, fontWeight: 'bold'}}>
                 Login
@@ -215,6 +217,8 @@ export default function LoginScreen(props) {
               position: 'relative',
               elevation: 3,
               backgroundColor: '#fff',
+              borderTopWidth: 4,
+              borderTopColor:"#41cc44"
             }}>
             <View style={styles.searchSection}>
               <EntypoIcon
@@ -272,7 +276,7 @@ export default function LoginScreen(props) {
                 left: width * 0.1,
                 zIndex: 10,
                 width: width * 0.7,
-                backgroundColor: 'rgb(123,238,199)',
+                backgroundColor: '#41cc44',
               }}>
               <Text style={{fontSize: height * 0.023, fontWeight: 'bold'}}>
                 SignUp
@@ -293,6 +297,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+    borderTopWidth: 5,
+    borderTopColor:"#41cc44"
   },
   searchIcon: {
     padding: 10,

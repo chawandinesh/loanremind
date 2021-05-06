@@ -1,28 +1,97 @@
 import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {View, Text, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import firebaseAuth from '@react-native-firebase/auth';
+import firebaseStorage from '@react-native-firebase/storage';
 import {Tooltip} from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
+import ImagePicker from 'react-native-image-crop-picker';
 import {useIsFocused} from '@react-navigation/native';
 const {height, width} = Dimensions.get('window');
 export default function ProfileScreen(props) {
   const isFocused = useIsFocused();
   const getInitialData = async () => {};
+  const [image, setImage] = useState(null);
   const [data, setData] = useState([]);
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerShown: false,
       headerStyle: {
-        backgroundColor:'#6beb34',
+        backgroundColor: '#6beb34',
+        elevation: 0,
+        shadowOpacity: 0
       },
-      headerTitle: ''
+      headerTitle: '',
     });
   }, [props.navigation]);
+
   const [profileInfo, setProfileInfo] = React.useState({
     name: '',
     email: '',
   });
+
+  const uploadImage = async uri => {
+    const uploadUri = uri.path;
+    const response = await fetch(uploadUri);
+    const childPath = `post/${firebaseAuth().currentUser.uid}/profile`;
+    const blob = await response.blob();
+    // const task = firebaseStorage().ref().child(childPath).delete()
+    const task = firebaseStorage().ref().child(childPath).put(blob);
+    const taskProgress = snapshot => {
+      console.log(snapshot.bytesTransferred);
+    };
+    const taskCompleted = () => {
+      task.snapshot.ref.getDownloadURL().then(resSnap => {
+        // savePostData(resSnap);
+        setImage(resSnap);
+      });
+    };
+
+    const taskError = snapshot => {
+      console.log(snapshot);
+    };
+    task.on('state_changed', taskProgress, taskError, taskCompleted);
+  };
+
+  useLayoutEffect(() => {
+    getInitialData();
+    const imageRef =
+      firebaseAuth().currentUser &&
+      firebaseStorage().ref(`post/${firebaseAuth().currentUser.uid}/profile`);
+    // let imageRef = firebase.storage().ref('/' + imageName);
+ 
+   imageRef && imageRef
+      .getDownloadURL()
+      .then(url => {
+        console.log(url);
+        setImage(url);
+        //from url you can fetched the uploaded image easily
+        // this.setState({profileImageUrl: url});
+      })
+      .catch(e => setImage(null));
+  }, [isFocused, props]);
+
+  const pickImage = () => {
+    ImagePicker.openPicker({
+      width: 300,
+      height: 400,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image.path);
+        uploadImage(image);
+      })
+      .catch(err => {
+        cosnole.log(err);
+      });
+  };
   useLayoutEffect(() => {
     props.navigation.setOptions({
       headerShown: true,
@@ -63,8 +132,8 @@ export default function ProfileScreen(props) {
     <View style={{height, width}}>
       <View
         style={{
-          height: height * 0.16,
-          width: height * 0.16,
+          height: height * 0.2,
+          width: height * 0.2,
           alignItems: 'center',
           zIndex: 13,
           justifyContent: 'center',
@@ -72,13 +141,21 @@ export default function ProfileScreen(props) {
           elevation: 3,
           position: 'absolute',
           top: height * 0.17,
-          left: width * 0.35,
+          left: width * 0.3,
           borderRadius: height * 0.3,
         }}>
-          <TouchableOpacity>
-
-        <Icon name="user-circle" size={height * 0.1} />
-          </TouchableOpacity>
+        {image === null ? (
+          <Icon name="user-circle" size={height * 0.1} />
+        ) : (
+          <Image
+            style={{
+              width: height * 0.2,
+              height: height * 0.2,
+              borderRadius: height * 0.1,
+            }}
+            source={{uri: image}}
+          />
+        )}
       </View>
       <View
         style={{
@@ -87,15 +164,29 @@ export default function ProfileScreen(props) {
           backgroundColor: '#6beb34',
           borderBottomRightRadius: height * 0.1,
           borderBottomLeftRadius: height * 0.1,
+          flexDirection: 'row',
         }}>
-          <Text style={{fontWeight:'bold', fontSize: height * 0.04,marginTop: height * 0.05, marginLeft: height * 0.03}}>Profile</Text>
-        </View>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: height * 0.04,
+            marginTop: height * 0.05,
+            marginLeft: height * 0.03,
+          }}>
+          Profile
+        </Text>
+      </View>
+      <TouchableOpacity
+        style={{position: 'absolute', top: height * 0.07, right: width * 0.1}}
+        onPress={() => pickImage()}>
+        <Icon name="edit" size={height * 0.04} />
+      </TouchableOpacity>
       <View style={{height: height * 0.7, width, zIndex: 0}}>
         <View
           style={{
             width: width * 0.98,
             alignSelf: 'center',
-            justifyContent: 'space-evenly',
+            justifyContent: 'space-around',
             height: height * 0.7,
             borderRadius: height * 0.1,
             position: 'absolute',
@@ -103,6 +194,12 @@ export default function ProfileScreen(props) {
             elevation: 4,
             backgroundColor: '#fff',
           }}>
+            <View></View>
+            <View></View>
+
+            <View  style={{height: height * 0.04}}></View>
+            <View></View>
+            <View style={{borderBottomWidth: 8,width: width * 0.9, alignSelf:'center', borderBottomColor:'#6beb34'}}></View>
           <View
             style={{
               height: height * 0.1,
@@ -113,7 +210,7 @@ export default function ProfileScreen(props) {
               justifyContent: 'center',
               backgroundColor: '#ddd',
               borderTopWidth: 6,
-              borderTopColor:'#6beb34'
+              borderTopColor: '#6beb34',
             }}>
             <Text style={{fontSize: height * 0.024, fontWeight: 'bold'}}>
               User Name: {profileInfo.name}
@@ -129,7 +226,7 @@ export default function ProfileScreen(props) {
               justifyContent: 'center',
               backgroundColor: '#ddd',
               borderTopWidth: 4,
-              borderTopColor:'#6beb34'
+              borderTopColor: '#6beb34',
             }}>
             <Text style={{fontSize: height * 0.024, fontWeight: 'bold'}}>
               Email ID: {profileInfo.email}
@@ -145,14 +242,14 @@ export default function ProfileScreen(props) {
               justifyContent: 'center',
               backgroundColor: '#ddd',
               borderTopWidth: 4,
-              borderTopColor:'#6beb34'
+              borderTopColor: '#6beb34',
             }}>
             <Text style={{fontSize: height * 0.024, fontWeight: 'bold'}}>
-              Currency Used:
+              Currency Used: $
             </Text>
           </View>
 
-          <View
+          {/* <View
             style={{
               height: height * 0.1,
               width: width * 0.9,
@@ -162,13 +259,18 @@ export default function ProfileScreen(props) {
               justifyContent: 'center',
               backgroundColor: '#ddd',
               borderTopWidth: 4,
-              borderTopColor:'#6beb34'
+              borderTopColor: '#6beb34',
             }}>
             <Text style={{fontSize: height * 0.024, fontWeight: 'bold'}}>
               Change password:
               <Text style={{fontWeight: 'bold', color: '#783783'}}>Change</Text>
             </Text>
-          </View>
+          </View> */}
+            <View style={{borderBottomWidth: 8,width: width * 0.9, alignSelf:'center', borderBottomColor:'#6beb34'}}></View>
+        <View></View>
+        <View></View>
+          <View></View>
+          <View></View>
         </View>
       </View>
       {/* <View style={styles.profileImageContainer}>

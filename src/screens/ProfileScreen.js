@@ -143,6 +143,13 @@ export default function ProfileScreen(props) {
           top: height * 0.17,
           left: width * 0.3,
           borderRadius: height * 0.3,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 1,
+            height: 1
+          },
+          shadowRadius: 2,
+          shadowOpacity: 1,
         }}>
         {image === null ? (
           <Icon name="user-circle" size={height * 0.1} />
@@ -192,6 +199,13 @@ export default function ProfileScreen(props) {
             position: 'absolute',
             zIndex: 0,
             elevation: 4,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 1,
+              height: 1
+            },
+            shadowRadius: 2,
+            shadowOpacity: 1,
             backgroundColor: '#fff',
           }}>
             <View></View>
@@ -206,6 +220,13 @@ export default function ProfileScreen(props) {
               width: width * 0.9,
               alignSelf: 'center',
               elevation: 2,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 1,
+                height: 1
+              },
+              shadowRadius: 2,
+              shadowOpacity: 1,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: '#ddd',
@@ -222,6 +243,13 @@ export default function ProfileScreen(props) {
               width: width * 0.9,
               alignSelf: 'center',
               elevation: 2,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 1,
+                height: 1
+              },
+              shadowRadius: 2,
+              shadowOpacity: 1,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: '#ddd',
@@ -238,6 +266,13 @@ export default function ProfileScreen(props) {
               width: width * 0.9,
               alignSelf: 'center',
               elevation: 2,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 1,
+                height: 1
+              },
+              shadowRadius: 2,
+              shadowOpacity: 1,
               alignItems: 'center',
               justifyContent: 'center',
               backgroundColor: '#ddd',

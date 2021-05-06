@@ -153,6 +153,13 @@ export default function LoginScreen(props) {
               justifyContent: 'space-evenly',
               position: 'relative',
               elevation: 3,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 1,
+                height: 1
+              },
+              shadowRadius: 2,
+              shadowOpacity: 1,
               backgroundColor: '#fff',
               borderTopWidth:5,
               borderTopColor:"#41cc44"
@@ -180,6 +187,7 @@ export default function LoginScreen(props) {
               />
               <TextInput
                 style={styles.input}
+                secureTextEntry
                 placeholder="Password"
                 onChangeText={text => setAuth({...auth, password: text})}
                 underlineColorAndroid="transparent"
@@ -194,6 +202,13 @@ export default function LoginScreen(props) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 elevation: 2,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowRadius: 2,
+                shadowOpacity: 1,
                 position: 'absolute',
                 bottom: -height * 0.04,
                 left: width * 0.1,
@@ -216,6 +231,13 @@ export default function LoginScreen(props) {
               justifyContent: 'space-evenly',
               position: 'relative',
               elevation: 3,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 1,
+                height: 1
+              },
+              shadowRadius: 2,
+              shadowOpacity: 1,
               backgroundColor: '#fff',
               borderTopWidth: 4,
               borderTopColor:"#41cc44"
@@ -257,6 +279,7 @@ export default function LoginScreen(props) {
               />
               <TextInput
                 style={styles.input}
+                secureTextEntry
                 placeholder="Password"
                 onChangeText={text => setSignupAuth({...auth, password: text})}
                 underlineColorAndroid="transparent"
@@ -271,6 +294,13 @@ export default function LoginScreen(props) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 elevation: 2,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowRadius: 2,
+                shadowOpacity: 1,
                 position: 'absolute',
                 bottom: -height * 0.04,
                 left: width * 0.1,
@@ -293,6 +323,13 @@ const styles = StyleSheet.create({
   searchSection: {
     flexDirection: 'row',
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 2,
+    shadowOpacity: 1,
     width: width * 0.8,
     justifyContent: 'center',
     alignItems: 'center',

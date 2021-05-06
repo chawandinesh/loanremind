@@ -78,11 +78,11 @@ export default function index() {
           <Stack.Screen
             name="HomeDrawer"
             component={HomeScreenDrawer}
-            options={{headerShown: false}}
+            options={{headerShown: false, headerTitle: 'Categories'}}
           />
           <Stack.Screen name="AddForm" component={AddForm} />
           {/* <Drawer.Screen name="Categories" component={CategoriesScreen}/> */}
-          <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+          <Stack.Screen name="DetailsScreen" component={DetailsScreen}  options={{headerTitle:'Details'}}/>
           <Stack.Screen name="CategoriesScreen" component={CategoriesList} />
         </Stack.Navigator>
       </NavigationContainer>

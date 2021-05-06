@@ -201,6 +201,13 @@ export default function DetailsScreen(props) {
           marginTop: height * 0.03,
           elevation: 4,
           shadowColor: '#000',
+          shadowOffset: {
+            width: 1,
+            height: 1
+          },
+          shadowRadius: 2,
+          shadowOpacity: 1,
+          shadowColor: '#000',
           shadowOffset: {width: 1, height: 1},
           shadowOpacity: 0.5,
           shadowRadius: 3,
@@ -219,6 +226,13 @@ export default function DetailsScreen(props) {
         style={{
           width: width * 0.9,
           elevation: 4,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 1,
+            height: 1
+          },
+          shadowRadius: 2,
+          shadowOpacity: 1,
           shadowColor: '#000',
           shadowOffset: {width: 1, height: 1},
           shadowOpacity: 0.5,
@@ -247,6 +261,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: height * 0.05,
     elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 2,
+    shadowOpacity: 1,
     shadowColor: '#000',
     shadowOffset: {width: 1, height: 1},
     shadowOpacity: 0.5,

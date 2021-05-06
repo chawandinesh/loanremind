@@ -120,11 +120,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 2,
+    shadowOpacity: 1,
   },
   openButton: {
     backgroundColor: '#F194FF',
     borderRadius: 20,
     padding: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1
+    },
+    shadowRadius: 2,
+    shadowOpacity: 1,
     elevation: 2,
   },
   textStyle: {

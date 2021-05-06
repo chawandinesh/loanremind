@@ -82,6 +82,13 @@ export default function DrawerContent(props) {
                 width: width * 0.6,
                 alignItems: 'center',
                 elevation: 1,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowRadius: 1,
+                shadowOpacity: 1,
                 paddingVertical: 10,
                 borderRightWidth: 2,
                 borderLeftWidth: 2,
@@ -105,6 +112,13 @@ export default function DrawerContent(props) {
                 width: width * 0.6,
                 alignItems: 'center',
                 elevation: 1,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowRadius: 1,
+                shadowOpacity: 1,
                 paddingVertical: 10,
                 borderRightWidth: 2,
                 borderLeftWidth: 2,
@@ -122,6 +136,14 @@ export default function DrawerContent(props) {
                 width: width * 0.6,
                 alignItems: 'center',
                 elevation: 1,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowRadius: 1,
+                shadowOpacity: 1,
+              
                 paddingVertical: 10,
                 borderRightWidth: 2,
                 borderLeftWidth: 2,
@@ -139,6 +161,13 @@ export default function DrawerContent(props) {
                 width: width * 0.6,
                 alignItems: 'center',
                 elevation: 1,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 1,
+                  height: 1
+                },
+                shadowRadius: 1,
+                shadowOpacity: 1,
                 paddingVertical: 10,
                 borderRightWidth: 2,
                 borderLeftWidth: 2,
@@ -172,7 +201,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   drawerNavigationContainer: {
-    height: height * 0.75,
+    height: height * 0.7,
     justifyContent: 'space-between',
   },
   drawerItemsContainer: {

@@ -72,6 +72,13 @@ export default function CategoriesScreen(props) {
           borderRadius: height * 0.02,
           // marginBottom: height * 0.01,
           elevation: 3,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 1,
+            height: 1
+          },
+          shadowRadius: 2,
+          shadowOpacity: 1,
           padding: 3,
           backgroundColor: '#fff',
           borderBottomWidth: 7,
@@ -105,6 +112,13 @@ export default function CategoriesScreen(props) {
             borderRadius: height * 0.02,
             // marginBottom: height * 0.01,
             elevation: 3,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 1,
+              height: 1
+            },
+            shadowRadius: 2,
+            shadowOpacity: 1,
             padding: 3,
             backgroundColor: '#fff',
             borderBottomWidth: 7,

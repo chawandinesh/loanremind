@@ -22,6 +22,7 @@ export default function CategoriesList(props) {
         backgroundColor: '#fff',
       },
       headerTitleAlign: 'center',
+      headerTitle: "Loan Data",
       headerTintColor: '#000',
     });
   }, [props.navigation]);
@@ -92,6 +93,13 @@ export default function CategoriesList(props) {
           shadowOpacity: 0.5,
           shadowRadius: 3,
           elevation: 3,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 1,
+            height: 1
+          },
+          shadowRadius: 2,
+          shadowOpacity: 1,
           // alignItems: 'center',
           borderTopWidth: 10,
           height: height * 0.2,
@@ -226,9 +234,16 @@ export default function CategoriesList(props) {
           height: height * 0.08,
           borderRadius: height * 0.02,
           elevation: 5,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 1,
+            height: 1
+          },
+          shadowRadius: 2,
+          shadowOpacity: 1,
           zIndex: 3,
           position: 'absolute',
-          bottom: height * 0.1,
+          bottom: height * 0.15,
           right: 20,
           shadowColor: '#000',
           shadowOffset: {height: 1, width: 1},

@@ -1,5 +1,6 @@
 import React from 'react';
-import FirebaseAuth from '@react-native-firebase/auth';
+import firebaseAuth from '@react-native-firebase/auth';
+import Toast from 'react-native-toast-message';
 import {
   View,
   Text,
@@ -42,7 +43,52 @@ export default function LoginScreen(props) {
             });
         })
         .catch(err => {
-          console.log(err, 'err');
+          if (err.code === 'auth/invalid-email') {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: 'Invalid Email',
+              text2: 'Please enter a valid email',
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 30,
+              bottomOffset: 40,
+              onShow: () => {},
+              onHide: () => {},
+              onPress: () => {},
+            });
+          }
+          if (err.code === 'auth/weak-password') {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: 'Weak Password',
+              text2: 'Please provide a strong password',
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 30,
+              bottomOffset: 40,
+              onShow: () => {},
+              onHide: () => {},
+              onPress: () => {},
+            });
+          }
+          if (err.code === 'auth/email-already-in-use') {
+            Toast.show({
+              type: 'error',
+              position: 'top',
+              text1: 'Email Already Registered',
+              text2: 'Please provide a different mail id',
+              visibilityTime: 2000,
+              autoHide: true,
+              topOffset: 30,
+              bottomOffset: 40,
+              onShow: () => {},
+              onHide: () => {},
+              onPress: () => {},
+            });
+          }
+          console.log(err.code, 'err');
         });
     }
   };
@@ -51,13 +97,58 @@ export default function LoginScreen(props) {
     //   alert('please fill all details');
     // } else {
     console.log('logintriggered');
-    FirebaseAuth()
+    firebaseAuth()
       .signInWithEmailAndPassword(auth.email, auth.password)
       .then(res => {
         console.log(res);
       })
       .catch(err => {
-        console.log(err);
+        console.log(err.code, 'err');
+        if (err.code === 'auth/invalid-email') {
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Invalid Email',
+            // text2: 'Please provide a different mail id',
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+            onShow: () => {},
+            onHide: () => {},
+            onPress: () => {},
+          });
+        }
+        if (err.code === 'auth/user-not-found') {
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'User Not found',
+            // text2: 'Please provide a different mail id',
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+            onShow: () => {},
+            onHide: () => {},
+            onPress: () => {},
+          });
+        }
+        if (err.code === 'auth/wrong-password') {
+          Toast.show({
+            type: 'error',
+            position: 'top',
+            text1: 'Wrong password',
+            // text2: 'Please provide a different mail id',
+            visibilityTime: 2000,
+            autoHide: true,
+            topOffset: 30,
+            bottomOffset: 40,
+            onShow: () => {},
+            onHide: () => {},
+            onPress: () => {},
+          });
+        }
       });
     // }
   };
@@ -66,7 +157,28 @@ export default function LoginScreen(props) {
       <ImageBackground
         source={require('../assets/bg2.jpg')}
         style={{height, width, zIndex: 0}}>
-        <View style={{height: height * 0.3, zIndex: 0}}></View>
+        <View style={{height: height * 0.16, zIndex: 0}}></View>
+
+        <View
+          style={{
+            height: height * 0.06,
+            alignSelf: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: width * 0.8,
+            borderRadius: height * 0.05,
+            backgroundColor: '#fff',
+          }}>
+          <Text
+            style={{
+              fontSize: height * 0.03,
+              color: '#000',
+              fontWeight: 'bold',
+            }}>
+            {loginView ? 'Login' : 'Signup'}
+          </Text>
+        </View>
+        <View style={{height: height * 0.1, zIndex: 0}}></View>
         <View
           style={{
             width: width,
@@ -156,13 +268,13 @@ export default function LoginScreen(props) {
               shadowColor: '#000',
               shadowOffset: {
                 width: 1,
-                height: 1
+                height: 1,
               },
               shadowRadius: 2,
               shadowOpacity: 1,
               backgroundColor: '#fff',
-              borderTopWidth:5,
-              borderTopColor:"#41cc44"
+              borderTopWidth: 5,
+              borderTopColor: '#41cc44',
             }}>
             <View style={styles.searchSection}>
               <EntypoIcon
@@ -205,7 +317,7 @@ export default function LoginScreen(props) {
                 shadowColor: '#000',
                 shadowOffset: {
                   width: 1,
-                  height: 1
+                  height: 1,
                 },
                 shadowRadius: 2,
                 shadowOpacity: 1,
@@ -234,13 +346,13 @@ export default function LoginScreen(props) {
               shadowColor: '#000',
               shadowOffset: {
                 width: 1,
-                height: 1
+                height: 1,
               },
               shadowRadius: 2,
               shadowOpacity: 1,
               backgroundColor: '#fff',
               borderTopWidth: 4,
-              borderTopColor:"#41cc44"
+              borderTopColor: '#41cc44',
             }}>
             <View style={styles.searchSection}>
               <EntypoIcon
@@ -252,7 +364,9 @@ export default function LoginScreen(props) {
               <TextInput
                 style={styles.input}
                 placeholder="User Name"
-                onChangeText={text => setSignupAuth({...auth, name: text})}
+                onChangeText={text =>
+                  setSignupAuth({...signupAuth, name: text})
+                }
                 underlineColorAndroid="transparent"
               />
             </View>
@@ -266,7 +380,9 @@ export default function LoginScreen(props) {
               <TextInput
                 style={styles.input}
                 placeholder="Email"
-                onChangeText={text => setSignupAuth({...auth, email: text})}
+                onChangeText={text =>
+                  setSignupAuth({...signupAuth, email: text})
+                }
                 underlineColorAndroid="transparent"
               />
             </View>
@@ -281,7 +397,9 @@ export default function LoginScreen(props) {
                 style={styles.input}
                 secureTextEntry
                 placeholder="Password"
-                onChangeText={text => setSignupAuth({...auth, password: text})}
+                onChangeText={text =>
+                  setSignupAuth({...signupAuth, password: text})
+                }
                 underlineColorAndroid="transparent"
               />
             </View>
@@ -297,7 +415,7 @@ export default function LoginScreen(props) {
                 shadowColor: '#000',
                 shadowOffset: {
                   width: 1,
-                  height: 1
+                  height: 1,
                 },
                 shadowRadius: 2,
                 shadowOpacity: 1,
@@ -314,6 +432,7 @@ export default function LoginScreen(props) {
             </TouchableOpacity>
           </View>
         )}
+        <Toast ref={ref => Toast.setRef(ref)} />
       </ImageBackground>
     </KeyboardAwareScrollView>
   );
@@ -326,7 +445,7 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 1,
-      height: 1
+      height: 1,
     },
     shadowRadius: 2,
     shadowOpacity: 1,
@@ -335,7 +454,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderTopWidth: 5,
-    borderTopColor:"#41cc44"
+    borderTopColor: '#41cc44',
   },
   searchIcon: {
     padding: 10,
